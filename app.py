@@ -131,22 +131,18 @@ HTML_TEMPLATE = """
         .chart-section { background: white; border-radius: 16px; padding: 30px; margin-bottom: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         .chart-title { font-size: 1.4rem; color: #333; margin-bottom: 20px; }
         img { max-width: 100%; border-radius: 8px; }
-        .download-btn { display: inline-block; background: #2E86AB; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; margin-top: 15px; }
-        .download-btn.red { background: #E94F37; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 Data Analysis Visualisations</h1>
+        <h1>Data Analysis Visualisations</h1>
         <section class="chart-section">
             <h2 class="chart-title">Scenario 1: Retail Holiday Demand Forecasting</h2>
             <img src="data:image/png;base64,{{ scenario1_chart }}">
-            <br><a href="/download/scenario1" class="download-btn">Download PNG</a>
         </section>
         <section class="chart-section">
             <h2 class="chart-title">Scenario 2: Telecom Customer Churn Analysis</h2>
             <img src="data:image/png;base64,{{ scenario2_chart }}">
-            <br><a href="/download/scenario2" class="download-btn red">Download PNG</a>
         </section>
     </div>
 </body>
@@ -159,27 +155,6 @@ def index():
     return render_template_string(HTML_TEMPLATE, 
                                   scenario1_chart=fig_to_base64(generate_scenario1_chart()),
                                   scenario2_chart=fig_to_base64(generate_scenario2_chart()))
-
-
-@app.route("/download/scenario1")
-def download_scenario1():
-    fig = generate_scenario1_chart()
-    buffer = BytesIO()
-    fig.savefig(buffer, format="png", dpi=300, bbox_inches="tight", facecolor="white")
-    buffer.seek(0)
-    plt.close(fig)
-    return send_file(buffer, mimetype="image/png", as_attachment=True, download_name="scenario1_forecast.png")
-
-
-@app.route("/download/scenario2")
-def download_scenario2():
-    fig = generate_scenario2_chart()
-    buffer = BytesIO()
-    fig.savefig(buffer, format="png", dpi=300, bbox_inches="tight", facecolor="white")
-    buffer.seek(0)
-    plt.close(fig)
-    return send_file(buffer, mimetype="image/png", as_attachment=True, download_name="scenario2_churn.png")
-
 
 if __name__ == "__main__":
     print("\nServer running at http://localhost:5001\n")
